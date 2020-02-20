@@ -9,14 +9,15 @@ public struct CollectionFlowLayoutMetrics {
 }
 
 public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
-    func sizeForItem(at index: Int, traitCollection: UITraitCollection) -> CGSize
-    func referenceHeaderSize(traitCollection: UITraitCollection) -> CGSize
-    func referenceFooterSize(traitCollection: UITraitCollection) -> CGSize
-    func layoutMetrics(traitCollection: UITraitCollection) -> CollectionFlowLayoutMetrics
+    func sizeForItem(at index: Int, suggested: CGSize, traitCollection: UITraitCollection) -> CGSize
+    func referenceHeaderSize(suggested: CGSize, traitCollection: UITraitCollection) -> CGSize
+    func referenceFooterSize(suggested: CGSize, traitCollection: UITraitCollection) -> CGSize
+    func layoutMetrics(suggested metrics: CollectionFlowLayoutMetrics, traitCollection: UITraitCollection) -> CollectionFlowLayoutMetrics
 }
 
 public extension CollectionFlowLayoutHandler {
-    func referenceHeaderSize(traitCollection: UITraitCollection) -> CGSize { return .zero }
-    func referenceFooterSize(traitCollection: UITraitCollection) -> CGSize { return .zero }
-    func layoutMetrics(traitCollection: UITraitCollection) -> CollectionFlowLayoutMetrics { return .init() }
+    func sizeForItem(at index: Int, suggested: CGSize, traitCollection: UITraitCollection) -> CGSize { return suggested }
+    func referenceHeaderSize(suggested: CGSize, traitCollection: UITraitCollection) -> CGSize { return suggested }
+    func referenceFooterSize(suggested: CGSize, traitCollection: UITraitCollection) -> CGSize { return suggested }
+    func layoutMetrics(suggested: CollectionFlowLayoutMetrics, traitCollection: UITraitCollection) -> CollectionFlowLayoutMetrics { return suggested }
 }
