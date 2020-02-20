@@ -2,9 +2,10 @@ import UIKit
 import ComposedUI
 
 public struct CollectionFlowLayoutMetrics {
-    public var contentInsets: UIEdgeInsets
-    public var minimumLineSpacing: CGFloat
-    public var minimumInteritemSpacing: CGFloat
+    public var contentInsets: UIEdgeInsets = .zero
+    public var minimumLineSpacing: CGFloat = 0
+    public var minimumInteritemSpacing: CGFloat = 0
+    public init() { }
 }
 
 public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
@@ -17,7 +18,5 @@ public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
 public extension CollectionFlowLayoutHandler {
     func referenceHeaderSize(traitCollection: UITraitCollection) -> CGSize { return .zero }
     func referenceFooterSize(traitCollection: UITraitCollection) -> CGSize { return .zero }
-    func contentInsets(traitCollection: UITraitCollection) -> UIEdgeInsets { return .zero }
-    func minimumLineSpacing(traitCollection: UITraitCollection) -> CGFloat { return 0 }
-    func minimumInteritemSpacing(traitCollection: UITraitCollection) -> CGFloat { return 0 }
+    func layoutMetrics(traitCollection: UITraitCollection) -> CollectionFlowLayoutMetrics { return .init() }
 }

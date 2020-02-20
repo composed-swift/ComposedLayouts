@@ -10,17 +10,17 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return .zero }
-        return section.contentInsets(traitCollection: collectionView.traitCollection)
+        return section.layoutMetrics(traitCollection: collectionView.traitCollection).contentInsets
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return 0 }
-        return section.minimumLineSpacing(traitCollection: collectionView.traitCollection)
+        return section.layoutMetrics(traitCollection: collectionView.traitCollection).minimumLineSpacing
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return 0 }
-        return section.minimumInteritemSpacing(traitCollection: collectionView.traitCollection)
+        return section.layoutMetrics(traitCollection: collectionView.traitCollection).minimumInteritemSpacing
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
