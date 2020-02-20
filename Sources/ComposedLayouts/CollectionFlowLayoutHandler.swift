@@ -1,13 +1,17 @@
 import UIKit
 import ComposedUI
 
+public struct CollectionFlowLayoutMetrics {
+    public var contentInsets: UIEdgeInsets
+    public var minimumLineSpacing: CGFloat
+    public var minimumInteritemSpacing: CGFloat
+}
+
 public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
     func sizeForItem(at index: Int, traitCollection: UITraitCollection) -> CGSize
     func referenceHeaderSize(traitCollection: UITraitCollection) -> CGSize
     func referenceFooterSize(traitCollection: UITraitCollection) -> CGSize
-    func contentInsets(traitCollection: UITraitCollection) -> UIEdgeInsets
-    func minimumLineSpacing(traitCollection: UITraitCollection) -> CGFloat
-    func minimumInteritemSpacing(traitCollection: UITraitCollection) -> CGFloat
+    func layoutMetrics(traitCollection: UITraitCollection) -> CollectionFlowLayoutMetrics
 }
 
 public extension CollectionFlowLayoutHandler {
