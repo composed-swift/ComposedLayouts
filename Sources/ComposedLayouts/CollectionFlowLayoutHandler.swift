@@ -33,12 +33,20 @@ public struct CollectionFlowLayoutEnvironment {
 /// Conform your section to this protocol to override sizing and metric values for a `UICollectionViewFlowLayout`
 public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
 
-    /// Return the size for the item at the specified index
+    /// Return the size for the element at the specified index
     /// - Parameters:
-    ///   - index: The index of the item
+    ///   - index: The index of the element
     ///   - suggested: A suggested value which is generally inherited from the layout itself
+    ///   - metrics: The current metrics for the elements in this section
     ///   - environment: The current environment for this layout
     func sizeForItem(at index: Int, suggested: CGSize, metrics: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CGSize
+
+    /// Return a sizing strategy for the specified index
+    /// - Parameters:
+    ///   - index: The index of the element
+    ///   - metrics: The current metrics for the elements in this section
+    ///   - environment: The current environment for this layout
+    func sizingStrategy(at index: Int, metrics: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CollectionFlowLayoutSizingStrategy?
 
     /// Return the size for the header in this section
     /// - Parameters:
@@ -62,7 +70,12 @@ public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
 
 // Default implementations
 public extension CollectionFlowLayoutHandler {
-    func sizeForItem(at index: Int, suggested: CGSize, metrics: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CGSize { return suggested }
+    func sizeForItem(at index: Int, suggested: CGSize, metrics: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CGSize {
+        return sizingStrategy(at: index, metrics: metrics, environment: environment)?
+            .size(forElementAt: index, environment: environment)
+            ?? suggested
+    }
+    func sizingStrategy(at index: Int, metrics: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CollectionFlowLayoutSizingStrategy? { return nil }
     func referenceHeaderSize(suggested: CGSize, environment: CollectionFlowLayoutEnvironment) -> CGSize { return suggested }
     func referenceFooterSize(suggested: CGSize, environment: CollectionFlowLayoutEnvironment) -> CGSize { return suggested }
     func layoutMetrics(suggested: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CollectionFlowLayoutMetrics { return suggested }
