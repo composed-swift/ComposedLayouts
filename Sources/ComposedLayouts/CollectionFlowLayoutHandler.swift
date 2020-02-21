@@ -19,6 +19,15 @@ public struct CollectionFlowLayoutEnvironment {
     public let contentSize: CGSize
     /// Returns the current traits of the collectionView
     public let traitCollection: UITraitCollection
+
+    /// Instantiates a new instance
+    /// - Parameters:
+    ///   - contentSize: The current content size for this environment
+    ///   - traitCollection: The current traits for this environment
+    public init(contentSize: CGSize, traitCollection: UITraitCollection) {
+        self.contentSize = contentSize
+        self.traitCollection = traitCollection
+    }
 }
 
 /// Conform your section to this protocol to override sizing and metric values for a `UICollectionViewFlowLayout`
