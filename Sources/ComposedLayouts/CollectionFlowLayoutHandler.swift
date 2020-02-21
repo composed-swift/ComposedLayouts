@@ -29,7 +29,7 @@ public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
     ///   - index: The index of the item
     ///   - suggested: A suggested value which is generally inherited from the layout itself
     ///   - environment: The current environment for this layout
-    func sizeForItem(at index: Int, suggested: CGSize, environment: CollectionFlowLayoutEnvironment) -> CGSize
+    func sizeForItem(at index: Int, suggested: CGSize, metrics: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CGSize
 
     /// Return the size for the header in this section
     /// - Parameters:
@@ -53,7 +53,7 @@ public protocol CollectionFlowLayoutHandler: CollectionSectionProvider {
 
 // Default implementations
 public extension CollectionFlowLayoutHandler {
-    func sizeForItem(at index: Int, suggested: CGSize, environment: CollectionFlowLayoutEnvironment) -> CGSize { return suggested }
+    func sizeForItem(at index: Int, suggested: CGSize, metrics: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CGSize { return suggested }
     func referenceHeaderSize(suggested: CGSize, environment: CollectionFlowLayoutEnvironment) -> CGSize { return suggested }
     func referenceFooterSize(suggested: CGSize, environment: CollectionFlowLayoutEnvironment) -> CGSize { return suggested }
     func layoutMetrics(suggested: CollectionFlowLayoutMetrics, environment: CollectionFlowLayoutEnvironment) -> CollectionFlowLayoutMetrics { return suggested }

@@ -11,6 +11,10 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         return metrics
     }
 
+    private func metrics(for section: CollectionFlowLayoutHandler, collectionView: UICollectionView, layout: UICollectionViewFlowLayout) -> CollectionFlowLayoutMetrics {
+        return section.layoutMetrics(suggested: suggestedMetrics(for: layout), environment: environment(collectionView: collectionView))
+    }
+
     private func environment(collectionView: UICollectionView) -> CollectionFlowLayoutEnvironment {
         return CollectionFlowLayoutEnvironment(contentSize: collectionView.bounds.size, traitCollection: collectionView.traitCollection)
     }
@@ -19,25 +23,26 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
         let suggested = layout.estimatedItemSize == .zero ? layout.itemSize : layout.estimatedItemSize
         guard let section = sectionProvider.sections[indexPath.section] as? CollectionFlowLayoutHandler else { return suggested }
-        return section.sizeForItem(at: indexPath.item, suggested: suggested, environment: environment(collectionView: collectionView))
+        let metrics = self.metrics(for: section, collectionView: collectionView, layout: layout)
+        return section.sizeForItem(at: indexPath.item, suggested: suggested, metrics: metrics, environment: environment(collectionView: collectionView))
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return layout.sectionInset }
-        return section.layoutMetrics(suggested: suggestedMetrics(for: layout), environment: environment(collectionView: collectionView)).contentInsets
+        return metrics(for: section, collectionView: collectionView, layout: layout).contentInsets
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return 0 }
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return layout.minimumLineSpacing }
-        return section.layoutMetrics(suggested: suggestedMetrics(for: layout), environment: environment(collectionView: collectionView)).minimumLineSpacing
+        return metrics(for: section, collectionView: collectionView, layout: layout).minimumLineSpacing
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return 0 }
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return layout.minimumInteritemSpacing }
-        return section.layoutMetrics(suggested: suggestedMetrics(for: layout), environment: environment(collectionView: collectionView)).minimumInteritemSpacing
+        return metrics(for: section, collectionView: collectionView, layout: layout).minimumInteritemSpacing
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
