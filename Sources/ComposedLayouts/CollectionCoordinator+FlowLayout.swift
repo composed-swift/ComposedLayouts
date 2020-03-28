@@ -12,11 +12,12 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     }
 
     private func metrics(for section: CollectionFlowLayoutHandler, collectionView: UICollectionView, layout: UICollectionViewFlowLayout) -> CollectionFlowLayoutMetrics {
-        return section.layoutMetrics(suggested: suggestedMetrics(for: layout), environment: environment(collectionView: collectionView))
+        return section.layoutMetrics(suggested: suggestedMetrics(for: layout), environment: environment(collectionView: collectionView, layout: layout))
     }
 
-    private func environment(collectionView: UICollectionView) -> CollectionFlowLayoutEnvironment {
-        return CollectionFlowLayoutEnvironment(contentSize: collectionView.bounds.size, traitCollection: collectionView.traitCollection)
+    private func environment(collectionView: UICollectionView, layout: UICollectionViewFlowLayout) -> CollectionFlowLayoutEnvironment {
+        let size = collectionView.bounds.insetBy(dx: layout.sectionInset.left + layout.sectionInset.right, dy: 0).size
+        return CollectionFlowLayoutEnvironment(contentSize: size, traitCollection: collectionView.traitCollection)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -24,7 +25,7 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         let suggested = layout.estimatedItemSize == .zero ? layout.itemSize : layout.estimatedItemSize
         guard let section = sectionProvider.sections[indexPath.section] as? CollectionFlowLayoutHandler else { return suggested }
         let metrics = self.metrics(for: section, collectionView: collectionView, layout: layout)
-        return section.sizeForItem(at: indexPath.item, suggested: suggested, metrics: metrics, environment: environment(collectionView: collectionView))
+        return section.sizeForItem(at: indexPath.item, suggested: suggested, metrics: metrics, environment: environment(collectionView: collectionView, layout: layout))
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -48,13 +49,13 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return layout.headerReferenceSize }
-        return section.referenceHeaderSize(suggested: layout.headerReferenceSize, environment: environment(collectionView: collectionView))
+        return section.referenceHeaderSize(suggested: layout.headerReferenceSize, environment: environment(collectionView: collectionView, layout: layout))
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
         guard let section = sectionProvider.sections[section] as? CollectionFlowLayoutHandler else { return layout.footerReferenceSize }
-        return section.referenceFooterSize(suggested: layout.footerReferenceSize, environment: environment(collectionView: collectionView))
+        return section.referenceFooterSize(suggested: layout.footerReferenceSize, environment: environment(collectionView: collectionView, layout: layout))
     }
 
 }

@@ -12,9 +12,13 @@ open class CollectionFlowLayoutSizingStrategy {
     public let columnCount: Int
     public let sizingMode: SizingMode
     public let metrics: CollectionFlowLayoutMetrics
-    public let prototype: UICollectionReusableView
+    public let prototype: UICollectionReusableView?
 
-    public init(prototype: UICollectionReusableView, columnCount: Int, sizingMode: SizingMode, metrics: CollectionFlowLayoutMetrics) {
+    public init(prototype: UICollectionReusableView?, columnCount: Int, sizingMode: SizingMode, metrics: CollectionFlowLayoutMetrics) {
+        if case .automatic = sizingMode, prototype == nil {
+            fatalError("Prototype cannot be nil when setting `sizingMode == .automatic`")
+        }
+
         self.prototype = prototype
         self.columnCount = columnCount
         self.sizingMode = sizingMode
@@ -54,7 +58,7 @@ open class CollectionFlowLayoutSizingStrategy {
             cachedSizes[index] = size
             return size
         case .automatic:
-            let targetView: UIView
+            let targetView: UIView?
             let targetSize = CGSize(width: width, height: 0)
 
             if let cell = prototype as? UICollectionViewCell {
@@ -63,10 +67,11 @@ open class CollectionFlowLayoutSizingStrategy {
                 targetView = prototype
             }
 
-            let size = targetView.systemLayoutSizeFitting(
+            let size = targetView?.systemLayoutSizeFitting(
                 targetSize,
                 withHorizontalFittingPriority: .required,
                 verticalFittingPriority: .fittingSizeLevel)
+                ?? .zero
 
             cachedSizes[index] = size
             return size
