@@ -1,19 +1,37 @@
 import UIKit
 import ComposedUI
 
+/// A helper class that encapsulates the sizing logic for building column/table style layouts with `UICollectionViewFlowLayout`
 open class CollectionFlowLayoutSizingStrategy {
 
+    /// The sizing mode to apply for all cells
     public enum SizingMode {
+        /// Cells will have a fixed height
         case fixed(height: CGFloat)
+        /// Cells should be calculated automatically using AutoLayout. If `isUniform == true` only the first cell will be sized, which will then be used for all subsequent cells.
         case automatic(isUniform: Bool)
+        /// Cells will be sized using an aspect ratio, using the `width` value as a reference. E.g. `height == width * ratio`
         case aspect(ratio: CGFloat)
     }
 
+    /// The total number of columns
     public let columnCount: Int
+
+    /// The sizing mode to use for sizing cells
     public let sizingMode: SizingMode
+
+    /// The metrics used for calculating column widths
     public let metrics: CollectionFlowLayoutMetrics
+
+    /// The prototype cell to use for sizing
     public let prototype: UICollectionReusableView?
 
+    /// Makes a new strategy
+    /// - Parameters:
+    ///   - prototype: The prototype cell to use for sizing
+    ///   - columnCount: The number of columns
+    ///   - sizingMode: The sizing mode to use for sizing
+    ///   - metrics: The metrics to use for calculating column widths
     public init(prototype: UICollectionReusableView?, columnCount: Int, sizingMode: SizingMode, metrics: CollectionFlowLayoutMetrics) {
         if case .automatic = sizingMode, prototype == nil {
             fatalError("Prototype cannot be nil when setting `sizingMode == .automatic`")
@@ -37,6 +55,11 @@ open class CollectionFlowLayoutSizingStrategy {
         }
     }
 
+    /// Returns the size required for the cell at the specified index
+    /// - Parameters:
+    ///   - index: The index of the cell
+    ///   - environment: The current environent
+    /// - Returns: The required size for the cell at the specified index
     open func size(forElementAt index: Int, environment: CollectionFlowLayoutEnvironment) -> CGSize {
         if let size = cachedSize(forElementAt: index) { return size }
 
