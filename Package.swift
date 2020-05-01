@@ -14,7 +14,7 @@ let package = Package(
             targets: ["ComposedLayouts"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/composed-swift/ComposedUI", from: "0.0.0"),
+        .package(url: "https://github.com/composed-swift/ComposedUI", from: "1.0.0"),
     ],
     targets: [
         .target(
