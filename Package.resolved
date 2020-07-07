@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Composed",
+        "repositoryURL": "https://github.com/composed-swift/composed",
+        "state": {
+          "branch": null,
+          "revision": "42aaf908c4ffdb9becb5eae458390c6e4b1ca323",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "ComposedUI",
+        "repositoryURL": "https://github.com/composed-swift/ComposedUI",
+        "state": {
+          "branch": null,
+          "revision": "4c8a50bfb59b7b658713ce642b41450fc6aee57e",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
