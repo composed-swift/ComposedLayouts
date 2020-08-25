@@ -9,7 +9,7 @@ open class CollectionFlowLayoutSizingStrategy {
         /// Cells will have a fixed height
         case fixed(height: CGFloat)
         /// Cells should be calculated automatically using AutoLayout. If `isUniform == true` only the first cell will be sized, which will then be used for all subsequent cells.
-        case automatic(isUniform: Bool)
+        case automatic(isUniform: Bool, prototype: UICollectionReusableView)
         /// Cells will be sized using an aspect ratio, using the `width` value as a reference. E.g. `height == width * ratio`
         case aspect(ratio: CGFloat)
     }
@@ -23,21 +23,13 @@ open class CollectionFlowLayoutSizingStrategy {
     /// The metrics used for calculating column widths
     public let metrics: CollectionFlowLayoutMetrics
 
-    /// The prototype cell to use for sizing
-    public let prototype: UICollectionReusableView?
-
     /// Makes a new strategy
     /// - Parameters:
     ///   - prototype: The prototype cell to use for sizing
     ///   - columnCount: The number of columns
     ///   - sizingMode: The sizing mode to use for sizing
     ///   - metrics: The metrics to use for calculating column widths
-    public init(prototype: UICollectionReusableView?, columnCount: Int, sizingMode: SizingMode, metrics: CollectionFlowLayoutMetrics) {
-        if case .automatic = sizingMode, prototype == nil {
-            fatalError("Prototype cannot be nil when setting `sizingMode == .automatic`")
-        }
-
-        self.prototype = prototype
+    public init(columnCount: Int, sizingMode: SizingMode, metrics: CollectionFlowLayoutMetrics) {
         self.columnCount = columnCount
         self.sizingMode = sizingMode
         self.metrics = metrics
@@ -50,7 +42,7 @@ open class CollectionFlowLayoutSizingStrategy {
             return cachedSizes[index]
         case .fixed:
             return cachedSizes.values.first
-        case let .automatic(isUniform):
+        case let .automatic(isUniform, _):
             return isUniform ? cachedSizes.values.first : cachedSizes[index]
         }
     }
@@ -80,7 +72,7 @@ open class CollectionFlowLayoutSizingStrategy {
             let size = CGSize(width: width, height: height)
             cachedSizes[index] = size
             return size
-        case .automatic:
+        case .automatic(_, let prototype):
             let targetView: UIView?
             let targetSize = CGSize(width: width, height: 0)
 
